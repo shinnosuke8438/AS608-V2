@@ -100,46 +100,42 @@ Blockly.Blocks['yolobit_fingerprint_clear'] = {
 
 // Any imports need to be reserved words
 Blockly.Python.addReservedWords('fingerprint');
+
 Blockly.Python['yolobit_fingerprint_create'] = function(block) {
   Blockly.Python.definitions_['import_fingerprint'] = 'from fingerprint import *';
   var value_id = Blockly.Python.valueToCode(block, 'ID', Blockly.Python.ORDER_ATOMIC);
-  // TODO: Assemble Python into code variable.
-  var code = 'getFingerprintEnroll('+ value_id +')\n';
+  var code = 'getFingerprintEnroll(' + value_id + ')\n';
   return code;
 };
 
 Blockly.Python['yolobit_fingerprint_result'] = function(block) {
-  // TODO: Assemble Python into code variable.
+  Blockly.Python.definitions_['import_fingerprint'] = 'from fingerprint import *';
   var code = 'getLastSaveResult()';
-  // TODO: Change ORDER_NONE to the correct strength.
   return [code, Blockly.Python.ORDER_NONE];
 };
 
 Blockly.Python['yolobit_fingerprint_verify'] = function(block) {
-  // TODO: Assemble Python into code variable.
+  Blockly.Python.definitions_['import_fingerprint'] = 'from fingerprint import *';
   var code = 'checkFinger()';
-  // TODO: Change ORDER_NONE to the correct strength.
   return [code, Blockly.Python.ORDER_NONE];
 };
 
 Blockly.Python['yolobit_fingerprint_check'] = function(block) {
+  Blockly.Python.definitions_['import_fingerprint'] = 'from fingerprint import *';
   var value_id = Blockly.Python.valueToCode(block, 'ID', Blockly.Python.ORDER_ATOMIC);
-  // TODO: Assemble Python into code variable.
-  var code = 'checkID('+ value_id +')';
+  var code = 'checkID(' + value_id + ')';
   return [code, Blockly.Python.ORDER_NONE];
 };
 
 Blockly.Python['yolobit_fingerprint_delete'] = function(block) {
   Blockly.Python.definitions_['import_fingerprint'] = 'from fingerprint import *';
   var value_id = Blockly.Python.valueToCode(block, 'ID', Blockly.Python.ORDER_ATOMIC);
-  // TODO: Assemble Python into code variable.
-  var code = 'fig.deleteModel('+ value_id +')\n';
+  var code = 'fig.deleteModel(' + value_id + ')\n';
   return code;
 };
 
 Blockly.Python['yolobit_fingerprint_clear'] = function(block) {
-  // TODO: Assemble Python into code variable.
+  Blockly.Python.definitions_['import_fingerprint'] = 'from fingerprint import *';
   var code = 'fig.emptyDatabase()\n';
-  // TODO: Change ORDER_NONE to the correct strength.
   return code;
 };

@@ -25,35 +25,39 @@ def getFingerprintEnroll(id, timeout_sec=5):
     """Quy trinh dang ky van tay toi uu toc do va thong bao chi tiet"""
     global SaveResult
     SaveResult = 0
+    timeout_ms = timeout_sec * 1000
 
     print("\n" + "=" * 45)
     print(">> [AS608] DANG KY VAN TAY CHO ID:", id)
     print("=" * 45)
 
-    # 1. Neu ngon tay dang cham san, yeu cau nhac ra truoc
-    dem_nhac_tay = 0
+    # Kiem tra giao tiep UART voi cam bien truoc
     p = fig.getImage()
+    if p == 0xFF:
+        print(">> [LOI KET NOI]: Khong nhan duoc phan hoi tu AS608 (Ma 0xFF)!")
+        print("   Vui long kiem tra day TX/RX (P14/P15) va nguon 3.3V.")
+        return 0
+
+    # 1. Neu ngon tay dang cham san (p == FINGERPRINT_OK), yeu cau nhac ra truoc
     if p != FINGERPRINT_NOFINGER:
         print(">> [NHAC NHO]: Vui long nhac ngon tay ra truoc...")
+        t0 = time.ticks_ms()
         while p != FINGERPRINT_NOFINGER:
-            time.sleep_ms(50)
-            dem_nhac_tay += 1
-            if dem_nhac_tay > 30:
+            if time.ticks_diff(time.ticks_ms(), t0) > 2500:
                 break
+            time.sleep_ms(30)
             p = fig.getImage()
 
     # 2. Cho cham tay LAN 1
     print("-> [BUOC 1/2]: Dat ngon tay len cam bien (Cho {}s)...".format(timeout_sec))
-    gioi_han = timeout_sec * 20
-    dem = 0
+    t0 = time.ticks_ms()
     p = fig.getImage()
     while p != FINGERPRINT_OK:
-        time.sleep_ms(50)
-        dem += 1
-        if dem >= gioi_han:
+        if time.ticks_diff(time.ticks_ms(), t0) >= timeout_ms:
             print(">> [HET GIO]: Da HUY dang ky!")
             SaveResult = 0
             return 0
+        time.sleep_ms(30)
         p = fig.getImage()
 
     print("   [+] Da chup anh 1! Dang tao mau...")
@@ -65,26 +69,24 @@ def getFingerprintEnroll(id, timeout_sec=5):
 
     # 3. Yeu cau nhac tay ra
     print("-> [HANH DONG]: NHAC NGON TAY RA...")
-    dem = 0
+    t0 = time.ticks_ms()
     p = fig.getImage()
     while p != FINGERPRINT_NOFINGER:
-        time.sleep_ms(50)
-        dem += 1
-        if dem >= 40:
+        if time.ticks_diff(time.ticks_ms(), t0) > 2500:
             break
+        time.sleep_ms(30)
         p = fig.getImage()
 
     # 4. Cho cham lai LAN 2
-    print("-> [BUOC 2/2]: Dat lai DUNG NGON TAY DO mot lan nua...")
-    dem = 0
+    print("-> [BUOC 2/2]: Dat lai DUNG NGON TAY DO mot lan nua (Cho {}s)...".format(timeout_sec))
+    t0 = time.ticks_ms()
     p = fig.getImage()
     while p != FINGERPRINT_OK:
-        time.sleep_ms(50)
-        dem += 1
-        if dem >= gioi_han:
+        if time.ticks_diff(time.ticks_ms(), t0) >= timeout_ms:
             print(">> [HET GIO]: Da HUY dang ky!")
             SaveResult = 0
             return 0
+        time.sleep_ms(30)
         p = fig.getImage()
 
     print("   [+] Da chup anh 2! Dang kiem tra...")
@@ -97,7 +99,7 @@ def getFingerprintEnroll(id, timeout_sec=5):
     # 5. Ghep model
     p = fig.createModel()
     if p != FINGERPRINT_OK:
-        print(">> [THAT BAI]: 2 lan cham khong khop cung 1 ngon tay!")
+        print(">> [THAT BAI]: 2 lan cham khong khop cung 1 ngon tay! Ma loi:", hex(p))
         SaveResult = 0
         return 0
 
@@ -117,7 +119,7 @@ def getFingerprintEnroll(id, timeout_sec=5):
 def searchFinger():
     p = fig.getImage()
     if p != FINGERPRINT_OK:
-        return -1  # Khong co tay cham -> Thoat ngay lap tuc (0 mili-giay tre)
+        return -1  # Khong co tay cham -> Thoat ngay lap tuc
 
     print(">> [AS608]: Phat hien ngon tay! Dang quet...")
     p = fig.image2Tz(1)
@@ -138,7 +140,6 @@ def checkFinger():
     """Ham phuc vu khoi lenh [doc cam bien van tay] tren Blockly"""
     global SaveResult
     result = searchFinger()
-    # Da bo hoan toan lenh time.sleep(0.2) giup vong lap chay muot ma
     if result != -1:
         if result == 0:
             SaveResult = 0
