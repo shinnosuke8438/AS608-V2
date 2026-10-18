@@ -119,22 +119,29 @@ def getFingerprintEnroll(id, timeout_sec=5):
 def searchFinger():
     p = fig.getImage()
     if p != FINGERPRINT_OK:
-        return -1  # Khong co tay cham -> Thoat ngay lap tuc
+        return -1  # Không có tay chạm -> Thoát luôn
 
     print(">> [AS608]: Phat hien ngon tay! Dang quet...")
     p = fig.image2Tz(1)
     if p != FINGERPRINT_OK:
         return -1
 
+    # Tiến hành đối chiếu vân tay
     p = fig.search()
     if p == FINGERPRINT_OK:
         fid = fig.return_FingerID()
         print(">> [XAC THUC DUNG]: Khop ID: {}".format(fid))
-        return fid
+        ket_qua = fid
     else:
         print(">> [TU CHOI]: Van tay LA, chua dang ky!")
-        return 0
-
+        ket_qua = 0
+        
+    # --- CƠ CHẾ BẮT BUỘC NHẤC TAY RA ---
+    # Vòng lặp này sẽ giam mạch lại ở đây cho đến khi nhấc ngón tay lên
+    while fig.getImage() == FINGERPRINT_OK:
+        time.sleep_ms(50)
+        
+    return ket_qua
 
 def checkFinger():
     """Ham phuc vu khoi lenh [doc cam bien van tay] tren Blockly"""
