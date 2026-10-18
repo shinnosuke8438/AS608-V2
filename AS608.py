@@ -143,4 +143,20 @@ class FINGER_PRINT:
         return self.fingerID
 
 
+def getTemplateCount(self):
+        self._flush_input()
+        self.uart.write(cmd_template_count)
+        # Gói tin trả về của lệnh này dài 14 byte
+        res = self._wait_and_read(14, timeout_ms=500)
+        try:
+            if res and len(res) >= 14:
+                confirm_code = res[9]
+                if confirm_code == 0x00: # 0x00 là thành công
+                    # Gộp 2 byte chứa số lượng vân tay
+                    count = (res[10] << 8) | res[11]
+                    return count
+            return -1
+        except Exception:
+            return -1
+
 fig = FINGER_PRINT()

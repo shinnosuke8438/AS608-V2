@@ -18,5 +18,7 @@
       </value>
     </block>
     <block type="yolobit_fingerprint_clear"></block>
+    <block type="yolobit_fingerprint_print_menu"></block>
+    <block type="yolobit_fingerprint_get_count"></block>
   </category>
 </xml>

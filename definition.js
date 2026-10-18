@@ -139,3 +139,40 @@ Blockly.Python['yolobit_fingerprint_clear'] = function(block) {
   var code = 'fig.emptyDatabase()\n';
   return code;
 };
+
+// --- KHỐI IN MENU HƯỚNG DẪN ---
+Blockly.Blocks['yolobit_fingerprint_print_menu'] = {
+  init: function() {
+    this.jsonInit({
+      "type": "yolobit_fingerprint_print_menu",
+      "message0": "hiển thị bảng hướng dẫn sử dụng",
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": "#ffa64d",
+      "tooltip": "In menu hướng dẫn thao tác ra cửa sổ lệnh"
+    });
+  }
+};
+
+Blockly.Python['yolobit_fingerprint_print_menu'] = function(block) {
+  Blockly.Python.definitions_['import_fingerprint'] = 'from fingerprint import *';
+  return 'print_menu()\n';
+};
+
+// --- KHỐI ĐỌC TỔNG SỐ VÂN TAY ---
+Blockly.Blocks['yolobit_fingerprint_get_count'] = {
+  init: function() {
+    this.jsonInit({
+      "type": "yolobit_fingerprint_get_count",
+      "message0": "đọc tổng số vân tay hiện có",
+      "output": null,
+      "colour": "#ffa64d",
+      "tooltip": "Trả về tổng số vân tay đang được lưu trong cảm biến"
+    });
+  }
+};
+
+Blockly.Python['yolobit_fingerprint_get_count'] = function(block) {
+  Blockly.Python.definitions_['import_fingerprint'] = 'from fingerprint import *';
+  return ['getTotalFingerprints()', Blockly.Python.ORDER_NONE];
+};

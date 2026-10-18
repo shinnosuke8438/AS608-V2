@@ -158,3 +158,25 @@ def checkID(id):
 
 def getLastSaveResult():
     return 1 if SaveResult == 1 else 0
+
+def print_menu():
+    print("\n" + "=" * 55)
+    print("        HUONG DAN SU DUNG KHOA CUA THONG MINH")
+    print("=" * 55)
+    print(" [BAO MAT]: Vui long nhap mat khau Admin tren Keypad")
+    print("            truoc khi thuc hien cac lenh ben duoi.")
+    print("=" * 55)
+    print(" [ A ] - THEM van tay moi")
+    print(" [ D ] - XOA mot van tay (se yeu cau nhap ID)")
+    print(" [ X ] - XOA TOAN BO van tay trong bo nho")
+    print(" [ C ] - KIEM TRA tong so van tay hien co")
+    print("=" * 55 + "\n")
+
+def getTotalFingerprints():
+    count = fig.getTemplateCount()
+    if count != -1:
+        print(">> [THONG TIN]: Tong so van tay dang luu trong he thong la: {}".format(count))
+        return count
+    else:
+        print(">> [LOI]: Khong the doc du lieu tu cam bien!")
+        return -1
